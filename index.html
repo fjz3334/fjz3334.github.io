@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-04-19 13:14:32" itemprop="dateModified" datetime="2024-04-19T13:14:32+08:00">2024-04-19</time>
+                <time title="修改时间：2024-04-19 21:08:27" itemprop="dateModified" datetime="2024-04-19T21:08:27+08:00">2024-04-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -214,14 +214,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>6.5k</span>
+              <span>9.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
+              <span>9 分钟</span>
             </span>
 
         </div>
@@ -234,359 +234,14 @@
 
       
           <h1 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h1><h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><p>Redis中的数据库概念与MySQL中类似，但Redis中的数据库不支持自定义数据库的名字，每个数据库以编号命名。Redis不支持为每个数据库设置不同的访问密码，一个客户端可以访问到所有的数据库。所以对于Redis来说数据库更像是一种命名空间，且<strong>不适宜存储不同应用程序的数据</strong>。</p>
-<p>比如可以使用0号数据库存储某个应用生产环境中的数据，使用1号数据库存储测试环境中的数据，但不适宜使用0号数据库存储A应用的数据而使用1号数据库B应用的数据，不同的应用应该使用不同的Redis实例存储数据。</p>
-<p>Redis默认有16个数据库，可以通过redis.conf文件中的databases进行修改。</p>
-<p><img src="/Redis%E5%9F%BA%E7%A1%80/1713342432845.png" alt="1713342432845"></p>
-<p>客户端与Redis建立连接后默认选择0号数据库，使用select [数据库编号]可以选择使用第几个数据库（集群不支持，集群模式下只有一个db0）。</p>
-<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><p>中文官方文档（5.0.4）：<a target="_blank" rel="noopener" href="https://www.redis.net.cn/order/">redis命令手册</a></p>
-<ol>
-<li>SET、MSET</li>
-</ol>
-<p>SET命令用于存储一个或多个字符串值到一个键中。如果该键不存在，则会创建一个新键。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET key value [EX seconds] [PX milliseconds] [NX|XX]</span><br></pre></td></tr></table></figure>
-
-<p>key是要存储的键名，value是要存储的值。EX和PX参数可选，用于设置键的过期时间，单位分别为秒和毫秒。NX和XX参数也可选，用于控制键的创建行为，NX表示只在键不存在时创建，XX表示只在键已存在时执行操作。</p>
-<p>MSET命令可用于一次设置多个键值对。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSET key1 value1 [key2 value2 ...]</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>GET、MGET</li>
-</ol>
-<p>GET命令用户返回给定key的值。如果key不存在返回null。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MGET key1 [key2 value2 ...]</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>EXPIRE、PEXPIRE</li>
-</ol>
-<p>EXPIRE命令用于设置键的过期时间，单位为秒，PEXPIRE类似，单位为毫秒。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPIRE key seconds</span><br></pre></td></tr></table></figure>
-
-<p>key是要设置过期时间的键名，seconds是过期时间，单位为秒。</p>
-<ol start="4">
-<li>SETEX、SETNX、MSETNX</li>
-</ol>
-<p>SETEX命令可用于一次设置带有过期时间的键值对。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SETEX key seconds value</span><br></pre></td></tr></table></figure>
-
-<p>key是要存储的键名，seconds是过期时间，单位为秒，value是要存储的值。</p>
-<p>SETNX命令判断key是否存在，不存在才设置。常用来<strong>实现分布式锁</strong>。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SETNX key value</span><br></pre></td></tr></table></figure>
-
-<p>MSETNX用来批量设置key，但该操作是原子的，在设置多个键的时候，如果其中一个key存在，那么其他未存在的key也会设置失败。</p>
-<ol start="5">
-<li>KEYS</li>
-</ol>
-<p>KEYS 用来查看key是否存在或有哪些key</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KEYS keyname/*</span><br></pre></td></tr></table></figure>
-
-<p>*用来查看所有key</p>
-<ol start="6">
-<li>FLUSHDB、FLUSHALL</li>
-</ol>
-<p>FLUSHDB用来清空当前数据库中的所有key。</p>
-<p>FLUSHALL用来清空所有数据库中的key。</p>
-<ol start="7">
-<li>MOVE</li>
-</ol>
-<p>MOVE用来移除数据库中对应的key和value</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MOVE key</span><br></pre></td></tr></table></figure>
-
-<ol start="8">
-<li>TTL</li>
-</ol>
-<p>TTL用来查看某个key的过期时间。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TTL key</span><br></pre></td></tr></table></figure>
-
-<ol start="9">
-<li>EXISTS</li>
-</ol>
-<p>EXISTS用来判断某个key是否存在数据库中。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXISTS key</span><br></pre></td></tr></table></figure>
-
-<p>如果存在返回1，不存在返回0</p>
-<ol start="10">
-<li>APPEND</li>
-</ol>
-<p>APPEND对某个key的value后追加内容。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">APPEND key &quot;value&quot;</span><br></pre></td></tr></table></figure>
-
-<p>如果当前追加的key不存在，相当于set key。APPEND追加成功会返回value的长度。</p>
-<ol start="11">
-<li>STRLEN</li>
-</ol>
-<p>STRLEN用来获得某个key对应value的长度。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STRLEN key</span><br></pre></td></tr></table></figure>
-
-<ol start="12">
-<li>INCR、DECR、INCRBY、DECRBY</li>
-</ol>
-<p>INCR用来使key对应的value值+1，DECR使key对应的value值-1。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INCR key</span><br><span class="line">DECR key</span><br></pre></td></tr></table></figure>
-
-<p>INCRBY和DECRBY可以按照指定的步长增加或减少，返回value的长度。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INCRBY key steps</span><br></pre></td></tr></table></figure>
-
-<p>steps代表增加的步长，返回value的长度。</p>
-<ol start="13">
-<li>GETRANGE、SETRANGE</li>
-</ol>
-<p>GETRANGE用来获取一个左右闭合区间内的值，下标从0开始。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GETRANGE key start end</span><br></pre></td></tr></table></figure>
-
-<p>start代表起始位置，end代表终止位置，注意这个区间是左右闭合，start和end的值都能获取到。end为-1时表示到最后一个字符。</p>
-<p>SETRANGE用来替换一个区间内的值。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SETRANGE key start value</span><br></pre></td></tr></table></figure>
-
-<p>start表示开始替换的起点，value为需要替换的值。替换时从起点开始（起点也会被替换）替换长度为value的内容。</p>
-<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="5种基础数据类型"><a href="#5种基础数据类型" class="headerlink" title="5种基础数据类型"></a>5种基础数据类型</h2><h4 id="String（字符串）"><a href="#String（字符串）" class="headerlink" title="String（字符串）"></a>String（字符串）</h4><p> String使用场景：</p>
-<ul>
-<li>计数器</li>
-<li>统计多单位的数量（统计粉丝数量） uid:xxxxx:follow 0</li>
-<li>对象缓存存储 user:{id}:name zhangsan user:{id}:age 18</li>
-</ul>
-<p>String最长可以存512MB数据。</p>
-<h4 id="List（列表）"><a href="#List（列表）" class="headerlink" title="List（列表）"></a>List（列表）</h4><p>List底层是一个链表，如果key不存在创建新的链表，如果存在新增内容。在两边插入效率最高，在中间插入效率较低。</p>
-<p>List常用命令如下：</p>
-<blockquote>
-<p>LPUSH key value [key, value, …]</p>
-</blockquote>
-<p>LPUSH用来将value放入一个list中。放入后的顺序是倒着的，相当于头插。</p>
-<blockquote>
-<p>RPUSH key value [key, value, …]</p>
-</blockquote>
-<p>RPUSH以尾插的方式将value放入list中。</p>
-<blockquote>
-<p>LRANGE key start end</p>
-</blockquote>
-<p>LRANGE用来获得list中[start, end]的value。</p>
-<blockquote>
-<p>LPOP key</p>
-</blockquote>
-<p>LPOP弹出头部第一个元素</p>
-<blockquote>
-<p>RPOP key</p>
-</blockquote>
-<p>RPOP弹出尾部第一个元素</p>
-<blockquote>
-<p>LINDEX key index</p>
-</blockquote>
-<p>LINDEX通过下标获得list中的某一个值</p>
-<blockquote>
-<p>LLEN key</p>
-</blockquote>
-<p>LLEN返回list的长度</p>
-<blockquote>
-<p>LREM key count value</p>
-</blockquote>
-<p>LREM移除list中count个value</p>
-<blockquote>
-<p>LTRIM key start length</p>
-</blockquote>
-<p>LTRIM从下标为start开始（包括start），保留length个元素</p>
-<blockquote>
-<p>RPOPLPUSH curlist newlist</p>
-</blockquote>
-<p>将当前curlist中的最后一个元素弹出，并放入到新的列表newlist中</p>
-<blockquote>
-<p>LSET key index value</p>
-</blockquote>
-<p>LSET将指定下标的值替换为value，若该下标不存在或列表不存在则会报错</p>
-<blockquote>
-<p>LINSERT key BEFORE|AFTER pivot value</p>
-</blockquote>
-<p>LINSERT将value插入到列表中某个元素pivot前面或者后面</p>
-<h4 id="Set（集合）"><a href="#Set（集合）" class="headerlink" title="Set（集合）"></a>Set（集合）</h4><p>Set常用命令：</p>
-<blockquote>
-<p>SADD key value [value2, value3, …]</p>
-</blockquote>
-<p>给set中添加value</p>
-<blockquote>
-<p>SMEMBERS key</p>
-</blockquote>
-<p>查看set中的所有value</p>
-<blockquote>
-<p>SISMEMBER key value</p>
-</blockquote>
-<p>查看set中的value是否存在，存在返回1，不存在返回0</p>
-<blockquote>
-<p>SCARD key</p>
-</blockquote>
-<p>获取set中的元素个数</p>
-<blockquote>
-<p>SREM key value</p>
-</blockquote>
-<p>移除set中指定的value</p>
-<blockquote>
-<p>SRANDMEMBER key count</p>
-</blockquote>
-<p>随机选出count个元素</p>
-<blockquote>
-<p>SPOP key</p>
-</blockquote>
-<p>随即删除一个元素</p>
-<blockquote>
-<p>SMOVE key1 key2 value</p>
-</blockquote>
-<p>将key1中的value移动到key2</p>
-<blockquote>
-<p>SDIFF key1 key2</p>
-</blockquote>
-<p>查看key1中与key2的差集</p>
-<blockquote>
-<p>SINTER key1 key2</p>
-</blockquote>
-<p>查看key1和key2的交集</p>
-<blockquote>
-<p>SUNION key1 key2</p>
-</blockquote>
-<p>查看key1和key2的并集</p>
-<p>应用场景：</p>
-<p>共同关注，共同爱好，二度好友（六度分割理论）</p>
-<h4 id="Hash（哈希）"><a href="#Hash（哈希）" class="headerlink" title="Hash（哈希）"></a>Hash（哈希）</h4><p>常用命令：</p>
-<blockquote>
-<p>HSET key hashkey hashvalue</p>
-</blockquote>
-<p>存入一个hash值</p>
-<blockquote>
-<p>HGET key hashkey</p>
-</blockquote>
-<p>获取对应hashkey的value</p>
-<blockquote>
-<p>HGETALL key</p>
-</blockquote>
-<p>获取hash中的所有值 </p>
-<blockquote>
-<p>HDEL key hashkey [hashkey2, …]</p>
-</blockquote>
-<p>删除hash中指定的key-value</p>
-<blockquote>
-<p>HLEN key</p>
-</blockquote>
-<p>获取hash中的value的数量</p>
-<blockquote>
-<p>HKEYS key</p>
-</blockquote>
-<p>获取hash中所有的key</p>
-<blockquote>
-<p>HVALS key</p>
-</blockquote>
-<p>获取hash中所有的value</p>
-<p>hash更适合对象的存储，尤其是经常变动的信息</p>
-<h4 id="Zset（有序集合）"><a href="#Zset（有序集合）" class="headerlink" title="Zset（有序集合）"></a>Zset（有序集合）</h4><p>底层采用跳表实现。</p>
-<p>常用命令：</p>
-<blockquote>
-<p>ZADD key [NX|XX] [CH] [INCR] score member [score member]</p>
-</blockquote>
-<p>将指定成员添加到zset中。XX表示仅更新存在成员，不添加新成员。NX表示不更新存在成员，仅添加新成员。CH修改返回值为发生变化的成员总数，原始返回值是新添加成员的总数。INCR与ZINCRBY相似，对成员分数进行递增。</p>
-<blockquote>
-<p>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]</p>
-</blockquote>
-<p>升序返回score在[min, max]之间的value，withscores返回时会带上scores</p>
-<blockquote>
-<p>ZREVRANGE key start stop [WITHSCORES]</p>
-</blockquote>
-<p>start&#x3D;0，stop&#x3D;-1，从大到小进行排序</p>
-<blockquote>
-<p>ZREM key member</p>
-</blockquote>
-<p>移除zset中的成员</p>
-<blockquote>
-<p>ZCARD key</p>
-</blockquote>
-<p>获取zset中的成员个数</p>
-<blockquote>
-<p>ZCOUNT key min max</p>
-</blockquote>
-<p>获取[min, max]之间的成员数量</p>
-<h2 id="3种特殊数据类型"><a href="#3种特殊数据类型" class="headerlink" title="3种特殊数据类型"></a>3种特殊数据类型</h2><h4 id="geospatial（地理位置）"><a href="#geospatial（地理位置）" class="headerlink" title="geospatial（地理位置）"></a>geospatial（地理位置）</h4><p>用于朋友的定位、附近的人，打车距离计算等等。</p>
-<p>常用命令如下：</p>
-<blockquote>
-<p>GEOADD key 经度 维度 member</p>
-</blockquote>
-<p>两极无法添加。</p>
-<blockquote>
-<p>GEOPOS key member</p>
-</blockquote>
-<p>获取指定member的经纬度</p>
-<blockquote>
-<p>GEODIST key member1 member2 [unit]</p>
-</blockquote>
-<p>查看两个成员之间的距离，unit指定单位：m、km、mi（英里）、ft（英尺）</p>
-<blockquote>
-<p>GEORADIUS key 经度 维度 半径 [withdist] [withcoord] count</p>
-</blockquote>
-<p>以经纬度为中心，查找半径内的成员，withdist返回距离，withcoord返回经纬度，count返回的个数</p>
-<blockquote>
-<p>GEORADIUSBYMEMBER key member radius [unit]</p>
-</blockquote>
-<p>找出位于指定元素周围的其他元素。</p>
-<p>GEO底层实现原理是Zset，可以使用zset的命令操作geo。</p>
-<h4 id="Hyperloglog"><a href="#Hyperloglog" class="headerlink" title="Hyperloglog"></a>Hyperloglog</h4><p>Hyperloglog用来进行基数统计，可以用来实现网页的UV统计,但无法记录在线用户名。</p>
-<p>基数是一个集合中不重复的元素，例如集合A&#x3D;{1,2,2,3,4}，基数&#x3D;4。</p>
-<p>官方介绍具有0.81%错误率，在UV统计中可以忽略不计。</p>
-<p>优点：占用的内存是固定的，2^64的元素仅需要12KB内存。从内存角度考虑首选Hyperloglog</p>
-<p>常用指令：</p>
-<blockquote>
-<p>PFADD key element [element2…]</p>
-</blockquote>
-<p>添加元素</p>
-<blockquote>
-<p>PFCOUNT key</p>
-</blockquote>
-<p>统计元素数量</p>
-<blockquote>
-<p>PFMERGE newkey sourcekey1 sourcekey2 [sourcekey3…]</p>
-</blockquote>
-<p>合并（取并集）sourcekey1和sourcekey2中的元素到新的newkey中。</p>
-<h4 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap"></a>Bitmap</h4><p>位数组，统计用户信息，是否活跃，是否登录，是否打卡等。两个状态的都可以使用</p>
-<p>常用命令：</p>
-<blockquote>
-<p>SETBIT key offset value</p>
-</blockquote>
-<p>设置第offset位的值为value，value只能为0或1</p>
-<blockquote>
-<p>GETBIT key offset</p>
-</blockquote>
-<p>获取第offset位的值</p>
-<blockquote>
-<p>BITCOUNT key [start end]</p>
-</blockquote>
-<p>统计从start到end值为1的数量</p>
-<h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><p>Redis事务本质是一组命令的集合，一个事务中的所有命令会被序列化，在事务执行过程中，会按照顺序执行。一次性、顺序性、排他性。因此Redis事务没有隔离级别的概念。</p>
-<p>Redis单条命令保证原子性，但是事务不保证原子性。</p>
-<p>事务使用：</p>
-<ul>
-<li>开启事务（multi）</li>
-<li>命令入队（……）</li>
-<li>执行事务（exec）</li>
-</ul>
-<p>放弃事务：</p>
-<ul>
-<li>开启事务（multi）</li>
-<li>命令入队（……）</li>
-<li>放弃事务（discard）</li>
-</ul>
-<p>编译型异常（代码有问题），事务中的所有命令都不会被执行。</p>
-<p>运行时异常，执行时错误命令会抛出异常，其他命令正常执行。</p>
-<h2 id="Redis实现乐观锁"><a href="#Redis实现乐观锁" class="headerlink" title="Redis实现乐观锁"></a>Redis实现乐观锁</h2><p>使用watch命令监控某个值，若该值被修改则事务执行失败。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 线程A</span></span><br><span class="line"><span class="built_in">set</span> money 100</span><br><span class="line"><span class="built_in">set</span> out 0</span><br><span class="line">watch money <span class="comment">#监控money</span></span><br><span class="line">multi <span class="comment"># 开启事务</span></span><br><span class="line">DECRBY money 20</span><br><span class="line">INCRBY out 20</span><br><span class="line"><span class="built_in">exec</span>	<span class="comment"># 执行事务</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 线程B</span></span><br><span class="line"><span class="built_in">set</span> money 1000</span><br></pre></td></tr></table></figure>
-
-<p>若线程A声明事务后还未执行，此时线程B修改了money的值，那么线程A开始事务后，事务执行失败。</p>
-<p>可以使用unwatch解锁，然后再重新使用watch加锁，然后再执行事务。</p>
-<p>该过程与乐观锁的Version实现类似。</p>
-<h1 id="Jedis"><a href="#Jedis" class="headerlink" title="Jedis"></a>Jedis</h1><p>在Java中使用Redis需要使用中间加Jedis。</p>
-<h2 id="导入依赖"><a href="#导入依赖" class="headerlink" title="导入依赖"></a>导入依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- https://mvnrepository.com/artifact/redis.clients/jedis --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.fastjson2<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.48<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 1. new jedis 对象</span></span><br><span class="line">        <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(<span class="string">&quot;172.29.1.122&quot;</span>, <span class="number">6379</span>);</span><br><span class="line">        System.out.println(jedis.ping());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>连接成功输出PONG。</p>
-<p>连接失败参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/terrenc_wyp/article/details/123737957">idea连接云服务器上的redis报错：Failed to connect to any host resolved for DNS name.【已解决】-CSDN博客</a></p>
-<p>Jedis中的命令与直接在Redis中操作命令相同。</p>
-<h2 id="Java实现Redis事务"><a href="#Java实现Redis事务" class="headerlink" title="Java实现Redis事务"></a>Java实现Redis事务</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(<span class="string">&quot;172.29.1.122&quot;</span>, <span class="number">6379</span>)) &#123;</span><br><span class="line">            <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JSONObject</span>();</span><br><span class="line">            jsonObject.put(<span class="string">&quot;hello&quot;</span>,<span class="string">&quot;world&quot;</span>);</span><br><span class="line">            jsonObject.put(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;fjz&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> jsonObject.toJSONString();</span><br><span class="line">            <span class="type">Transaction</span> <span class="variable">multi</span> <span class="operator">=</span> jedis.multi();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                multi.set(<span class="string">&quot;user1&quot;</span>, result);</span><br><span class="line">                multi.set(<span class="string">&quot;user2&quot;</span>, result);</span><br><span class="line">                <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>/<span class="number">0</span>;   <span class="comment">//抛出异常事务</span></span><br><span class="line">                multi.exec();   <span class="comment">//执行事务</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                multi.discard();    <span class="comment">//放弃事务</span></span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                System.out.println(jedis.get(<span class="string">&quot;user1&quot;</span>));</span><br><span class="line">                System.out.println(jedis.get(<span class="string">&quot;user2&quot;</span>));</span><br><span class="line">                jedis.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="SpringBoot整合Redis"><a href="#SpringBoot整合Redis" class="headerlink" title="SpringBoot整合Redis"></a>SpringBoot整合Redis</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/04/17/Redis%E5%9F%BA%E7%A1%80/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -628,10 +283,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-04-17 15:18:11 / 修改时间：15:53:58" itemprop="dateCreated datePublished" datetime="2024-04-17T15:18:11+08:00">2024-04-17</time>
+              <time title="创建时间：2024-04-17 15:18:11" itemprop="dateCreated datePublished" datetime="2024-04-17T15:18:11+08:00">2024-04-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-04-19 14:30:44" itemprop="dateModified" datetime="2024-04-19T14:30:44+08:00">2024-04-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -668,8 +329,14 @@
 
       
           <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文仅用来保存实用的文章，若有侵权联系我删除~</p>
-<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45740503/article/details/135788641">Linux下安装 Redis7_redis7.2.4-CSDN博客</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/04/17/%E5%A5%BD%E6%96%87%E6%94%B6%E8%97%8F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -896,12 +563,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">34k</span>
+    <span title="站点总字数">37k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">30 分钟</span>
+    <span title="站点阅读时长">34 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
