@@ -27,11 +27,11 @@
 <meta property="og:site_name" content="官渡のBlog">
 <meta property="og:description" content="自我介绍面试官您好,我叫XXX,是XXX大学计算机科学与技术专业25届的研究生。在校期间我学习了计算机网络、数据结构、数据库、Java等课程，自学了Java相关技术。我有三段主要的项目经历，第一个项目是实验室的科研项目，采用三维视觉的方法无接触的测量动物体尺，我主要负责数据处理和算法实现，项目结束后以第一作者身份发表了2篇SCI论文。第二个项目是针对植物叶片病害早期诊断问题，我带领团队提出了一种基">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:\Users\fjz\AppData\Roaming\Typora\typora-user-images\1711117904684.png">
+<meta property="og:image" content="https://fjz3334.com/2024/04/12/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0/Users/fjz/AppData/Roaming/Typora/typora-user-images/1711117904684.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/82ebcac24e304be3869d512029c61850.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5pe25YWJXzEwMjQ=,size_20,color_FFFFFF,t_70,g_se,x_16">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/556f9c997706494b8b72c118c3d882cd.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5pe25YWJXzEwMjQ=,size_20,color_FFFFFF,t_70,g_se,x_16">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201019084158708.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTA4OTk5ODU=,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="c:\Users\fjz\AppData\Roaming\Typora\typora-user-images\1710936033906.png">
+<meta property="og:image" content="https://fjz3334.com/2024/04/12/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0/Users/fjz/AppData/Roaming/Typora/typora-user-images/1710936033906.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190729101837604.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xvdWxhbnl1ZV8=,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190729102508654.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xvdWxhbnl1ZV8=,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://pic1.zhimg.com/80/v2-4f6fa8ccb801b7967f8145277c7b7ed8_720w.webp">
@@ -40,7 +40,7 @@
 <meta property="article:author" content="官渡">
 <meta property="article:tag" content="面经">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:\Users\fjz\AppData\Roaming\Typora\typora-user-images\1711117904684.png">
+<meta name="twitter:image" content="https://fjz3334.com/2024/04/12/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0/Users/fjz/AppData/Roaming/Typora/typora-user-images/1711117904684.png">
 
 <link rel="canonical" href="https://fjz3334.com/2024/04/12/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0/">
 
@@ -262,7 +262,7 @@
 <h1 id="“翠绿守护”植物叶片病害诊断系统"><a href="#“翠绿守护”植物叶片病害诊断系统" class="headerlink" title="“翠绿守护”植物叶片病害诊断系统"></a>“翠绿守护”植物叶片病害诊断系统</h1><p>项目介绍：</p>
 <p>针对人工进行叶片病害种类和病害程度诊断费时费力的问题，提出了一种基于语义分割的病害诊断模型。在这个项目中我是项目负责人，负责算法实现、统筹项目进度等。在项目进行时，发现特征提取过程中的长距离特征丢失，模型仅学习到部分区域特征，导致病害识别准确率较低。提出了一种斜纹池化算法，修改池化层使其可以提取多角度长距离的特征，病害识别准确率从90%提升到99%。最后以第一作者身份发表一篇二区SCI论文。</p>
 <p>当时方法大多采用对图像分类的方式进行病害诊断，但这种方法难以准确诊断病害程度，对图片的整体分类容易忽视小面积病斑带来的相近病害程度混淆。因此，我们采用对图像中每个像素点进行分类的方法，将所有的病斑区域分割出来，计算病斑区域占叶片面积的百分比，根据叶片病害诊断标准中对于病害程度的定义进行诊断。为了提升病害诊断的准确率，提出了一种斜纹池化算法。池化是深度学习中一个常见的操作，是对于卷积提取到的图像特征进行特征选择，通常池化层是一个远小于图像大小的矩形滑动窗口。但对于叶片中的病害来说，形状和分布通常是不均匀的，所以提出长距离的斜纹池化，提取远距离的特征，提高病害诊断的准确率。</p>
-<h2 id="数据传输过程（架构"><a href="#数据传输过程（架构" class="headerlink" title="数据传输过程（架构)"></a>数据传输过程（架构)</h2><p><img src="C:\Users\fjz\AppData\Roaming\Typora\typora-user-images\1711117904684.png" alt="1711117904684"></p>
+<h2 id="数据传输过程（架构"><a href="#数据传输过程（架构" class="headerlink" title="数据传输过程（架构)"></a>数据传输过程（架构)</h2><p><img src="/2024/04/12/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0/Users\fjz\AppData\Roaming\Typora\typora-user-images\1711117904684.png" alt="1711117904684"></p>
 <p>当用户上传一张图片时，服务器首先（protobuf）对图片进行编码处理，提升数据传输效率。由于病害识别模型识别速度较慢，所以将编码后的数据被发布到消息队列中，实现解耦、异步和负载均衡的效果。随后，消费者消费新消息，作为gRPC客户端，将请求发送给gRPC服务端，调用叶片病害识别诊断模型进行诊断，获取诊断结果。gRPC客户端接收到这些结果后，将它们存储在Redis缓存中。最后从Redis中获取查询结果返回给用户。</p>
 <h2 id="如何设计Kafka的消息队列？如何实现负载均衡和消息分区的？"><a href="#如何设计Kafka的消息队列？如何实现负载均衡和消息分区的？" class="headerlink" title="如何设计Kafka的消息队列？如何实现负载均衡和消息分区的？"></a>如何设计Kafka的消息队列？如何实现负载均衡和消息分区的？</h2><p>创建一个专门用于图像上传的Kafka主题，该主题接收来自客户端上传的图像数据。</p>
 <p>客户端作为生产者，将图像数据发布到图像上传主题。每个上传的图像都被封装成一个消息，包含图像数据及其元数据。</p>
@@ -556,7 +556,7 @@
 <li><strong>功能</strong>：包括任务分配、进度跟踪、财务报告、资源调配等。管理系统更多地聚焦于企业内部流程和资源的优化管理。</li>
 <li><strong>数据使用</strong>：管理系统主要处理企业内部数据，如员工信息、财务数据、生产和库存数据等，重点是优化内部流程和提高效率。</li>
 </ul>
-<h2 id="ShardingJDBC执行过程"><a href="#ShardingJDBC执行过程" class="headerlink" title="ShardingJDBC执行过程"></a>ShardingJDBC执行过程</h2><p><img src="C:\Users\fjz\AppData\Roaming\Typora\typora-user-images\1710936033906.png" alt="1710936033906"></p>
+<h2 id="ShardingJDBC执行过程"><a href="#ShardingJDBC执行过程" class="headerlink" title="ShardingJDBC执行过程"></a>ShardingJDBC执行过程</h2><p><img src="/2024/04/12/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AE%B0/Users\fjz\AppData\Roaming\Typora\typora-user-images\1710936033906.png" alt="1710936033906"></p>
 <h1 id="简历技术相关面试题"><a href="#简历技术相关面试题" class="headerlink" title="简历技术相关面试题"></a>简历技术相关面试题</h1><h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p><a target="_blank" rel="noopener" href="https://javaguide.cn/java/collection/java-collection-questions-01.html">Java集合常见面试题总结(上) | JavaGuide</a>（LIst、Set、Queue）</p>
 <p><a target="_blank" rel="noopener" href="https://javaguide.cn/java/collection/java-collection-questions-02.html#map-%E9%87%8D%E8%A6%81">Java集合常见面试题总结(下) | JavaGuide</a>（Map、Collections）</p>
 <h3 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h3><p><a target="_blank" rel="noopener" href="https://javaguide.cn/java/basis/java-basic-questions-03.html#%E6%B3%A8%E8%A7%A3">Java基础常见面试题总结(下) | JavaGuide</a>（何为注解？注解的解析方法？）</p>
